@@ -13,7 +13,7 @@
  * To download PHPStats visit
  * <a href="https://github.com/mcordingley/PHPStats">the GitHub page</a>
  * for the latest code or download the
- * <a href="https://github.com/mcordingley/PHPStats/zipball/v0.1.1">current stable version</a>.
+ * <a href="https://github.com/mcordingley/PHPStats/zipball/v0.2">current stable version</a>.
  * 
  * @section installing Installation
  * Installing PHPStats is easy.  Just copy the PHPStats.phar file into the
@@ -32,8 +32,13 @@
  * please refer to the copy of LICENSE.txt that accompanies your download.
  * 
  * @section changelog Change Log
+ * 
+ * v0.2
+ * Added a Matrix class for Linear Algebra
+ * Added the Rayleigh Distribution
+ * 
  * v0.1.1
- * Cauchy Distribution
+ * Added the Cauchy Distribution
  * Assorted bug fixes
  * 
  * v0.1
