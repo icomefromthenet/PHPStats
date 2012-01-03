@@ -48,10 +48,12 @@ class MultipleRegression {
 	 * @param Matrix $observations An n by m+1 matrix representing the observed predictor variables
 	 * @param Matrix $outcomes An n by 1 matrix representing the observed outcomes, i.e. the dependent variables
 	 */
-	function __construct(Matrix $observations, Matrix $outcomes) {
+	public function __construct(Matrix $observations, Matrix $outcomes) {
 		$this->observations = $observations;
 		$this->outcomes = $outcomes;
-		
+
+		for ($i = 1; $i <= $this->outcomes->getColumns(); $i++) $this->outcomes->setElement($i, 1, transformY($this->outcomes->getElement($i, 1)));
+
 		$this->coefficients = return $this->observations->transpose()->dotMultiply($this->observations)->inverse()->dotMultiply($this->observations->transpose())->dotMultiply($this->outcomes);
 	}
 	
@@ -62,7 +64,7 @@ class MultipleRegression {
 	 * 
 	 * @return Matrix A 1 by m+1 matrix of predictor coefficients
 	 */
-	function getCoefficients() {
+	public function getCoefficients() {
 		return $this->coefficients;
 	}
 	
@@ -74,8 +76,16 @@ class MultipleRegression {
 	 * @param Matrix $observations A 1 by m+1 matrix representing a set of predictor variables
 	 * @return float The predicted outcome
 	 */
-	function predict(Matrix $observations) {
+	public function predict(Matrix $observations) {
 		$prediction = $observations->transpose()->dotMultiply($this->coefficients);
-		return $prediction->getElement(1, 1); //Should be a 1 by 1 matrix
+		return reformY($prediction->getElement(1, 1)); //Should be a 1 by 1 matrix
+	}
+
+	private function transformY($value) {
+		return $value;
+	}
+
+	private function reformY($value) {
+		return $value;
 	}
 }
