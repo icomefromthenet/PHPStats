@@ -2,6 +2,7 @@
 require_once('lib/Stats.php');
 require_once('lib/ProbabilityDistribution/ProbabilityDistribution.php');
 require_once('lib/ProbabilityDistribution/Normal.php');
+require_once('lib/StatisticalTests.php');
 
 use \PHPStats\ProbabilityDistribution\Normal as Normal;
 
@@ -13,7 +14,10 @@ class NormalTest extends PHPUnit_Framework_TestCase {
 	}
 
 	public function test_rvs() {
-		//$this->assertEquals(, $this->testObject->rvs());
+		$variates = array();
+		for ($i = 0; $i < 10000; $i++) $variates[] = $this->testObject->rvs();
+		$this->assertGreaterThanOrEqual(0.01, \PHPStats\StatisticalTests::kolmogorovSmirnov($variates, $this->testObject));
+		$this->assertLessThanOrEqual(0.99, \PHPStats\StatisticalTests::kolmogorovSmirnov($variates, $this->testObject));
 	}
 
 	public function test_pdf() {

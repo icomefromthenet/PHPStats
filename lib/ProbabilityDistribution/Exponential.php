@@ -49,7 +49,6 @@ class Exponential extends ProbabilityDistribution {
 	 * Returns a random float
 	 * 
 	 * @return float The random variate.
-	 * @todo Untested
 	 */
 	public function rvs() {
 		return self::getRvs($this->lambda);
@@ -121,9 +120,8 @@ class Exponential extends ProbabilityDistribution {
 	 * @param float $lambda Scale parameter
 	 * @return float The random variate.
 	 * @static
-	 * @todo Untested
 	 */
-	static function getRvs($lambda = 1) {
+	public static function getRvs($lambda = 1) {
 		return -log(self::randFloat())/$lambda;
 	}
 	
@@ -135,7 +133,7 @@ class Exponential extends ProbabilityDistribution {
 	 * @return float The probability
 	 * @static
 	 */
-	static function getPdf($x, $lambda = 1) {
+	public static function getPdf($x, $lambda = 1) {
 		return $lambda*exp(-$lambda*$x);
 	}
 	
@@ -147,7 +145,7 @@ class Exponential extends ProbabilityDistribution {
 	 * @return float The probability
 	 * @static
 	 */
-	static function getCdf($x, $lambda = 1) {
+	public static function getCdf($x, $lambda = 1) {
 		return 1.0 - exp(-$lambda*$x);
 	}
 	
@@ -159,7 +157,7 @@ class Exponential extends ProbabilityDistribution {
 	 * @return float The probability
 	 * @static
 	 */
-	static function getSf($x, $lambda = 1) {
+	public static function getSf($x, $lambda = 1) {
 		return 1.0 - self::getCdf($x, $lambda);
 	}
 	
@@ -171,7 +169,7 @@ class Exponential extends ProbabilityDistribution {
 	 * @return float The value that gives a cdf of $x
 	 * @static
 	 */
-	static function getPpf($x, $lambda = 1) {
+	public static function getPpf($x, $lambda = 1) {
 		return log(1 - $x) / -$lambda;
 	}
 	
@@ -183,7 +181,7 @@ class Exponential extends ProbabilityDistribution {
 	 * @return float The value that gives an sf of $x
 	 * @static
 	 */
-	static function getIsf($x, $lambda = 1) {
+	public static function getIsf($x, $lambda = 1) {
 		return self::getPpf(1.0 - $x, $lambda);
 	}
 	
@@ -195,7 +193,7 @@ class Exponential extends ProbabilityDistribution {
 	 * @return type array A dictionary containing the first four moments of the distribution
 	 * @static
 	 */
-	static function getStats($moments = 'mv', $lambda = 1) {
+	public static function getStats($moments = 'mv', $lambda = 1) {
 		$return = array();
 		
 		if (strpos($moments, 'm') !== FALSE) $return['mean'] = 1.0/$lambda;

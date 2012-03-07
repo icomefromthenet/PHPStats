@@ -122,10 +122,11 @@ class StudentsT extends ProbabilityDistribution {
 	 * @param float $df The degrees of freedeom.  Default 1
 	 * @return float The random variate.
 	 * @static
-	 * @todo Unimplemented
 	 */
-	static function getRvs($df = 1) {
-		return 0; //TODO: Student's T rvs
+	public static function getRvs($df = 1) {
+		$Z = \PHPStats\ProbabilityDistribution\Normal::getRvs(0, 1);
+		$V = \PHPStats\ProbabilityDistribution\ChiSquare::getRvs($df);
+		return $Z / sqrt($V/$df);
 	}
 	
 	/**
@@ -136,7 +137,7 @@ class StudentsT extends ProbabilityDistribution {
 	 * @return float The probability
 	 * @static
 	 */
-	static function getPdf($x, $df = 1) {
+	public static function getPdf($x, $df = 1) {
 		return \PHPStats\Stats::gamma(($df + 1)/ 2) * pow(1 + pow($x, 2)/$df, -($df + 1)/2)/ (sqrt($df * M_PI)*\PHPStats\Stats::gamma($df/2));
 	}
 	
@@ -148,7 +149,7 @@ class StudentsT extends ProbabilityDistribution {
 	 * @return float The probability
 	 * @static
 	 */
-	static function getCdf($x, $df = 1) {
+	public static function getCdf($x, $df = 1) {
 		$return = 1 - .5*\PHPStats\Stats::regularizedIncompleteBeta($df/2, 0.5, $df/(pow($x, 2) + $df)); //Valid only for $x > 0
 		
 		if ($x < 0) return 1 - $return; //...but we can infer < 0 by way of symmetry.
@@ -164,7 +165,7 @@ class StudentsT extends ProbabilityDistribution {
 	 * @return float The probability
 	 * @static
 	 */
-	static function getSf($x, $df = 1) {
+	public static function getSf($x, $df = 1) {
 		return 1.0 - self::getCdf($x, $df);
 	}
 	
@@ -176,7 +177,7 @@ class StudentsT extends ProbabilityDistribution {
 	 * @return float The value that gives a cdf of $x
 	 * @static
 	 */
-	static function getPpf($x, $df = 1) {
+	public static function getPpf($x, $df = 1) {
 		return pow($df/(\PHPStats\Stats::iregularizedIncompleteBeta($df/2, 0.5, 2* (1 - $x))) - $df, 0.5);
 	}
 	
@@ -188,7 +189,7 @@ class StudentsT extends ProbabilityDistribution {
 	 * @return float The value that gives an sf of $x
 	 * @static
 	 */
-	static function getIsf($x, $df = 1) {
+	public static function getIsf($x, $df = 1) {
 		return self::getPpf(1.0 - $x, $df);
 	}
 	
@@ -200,7 +201,7 @@ class StudentsT extends ProbabilityDistribution {
 	 * @return type array A dictionary containing the first four moments of the distribution
 	 * @static
 	 */
-	static function getStats($moments = 'mv', $df = 1) {
+	public static function getStats($moments = 'mv', $df = 1) {
 		$return = array();
 		
 		if (strpos($moments, 'm') !== FALSE) {

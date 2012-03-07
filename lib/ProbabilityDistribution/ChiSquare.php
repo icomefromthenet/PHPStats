@@ -49,7 +49,6 @@ class ChiSquare extends ProbabilityDistribution {
 	 * Returns a random float
 	 * 
 	 * @return float The random variate.
-	 * @todo Untested
 	 */
 	public function rvs() {
 		return self::getRvs($this->k);
@@ -123,9 +122,8 @@ class ChiSquare extends ProbabilityDistribution {
 	 * @param float $k Shape parameter
 	 * @return float The random variate.
 	 * @static
-	 * @todo Untested
 	 */
-	static function getRvs($k = 1) {
+	public static function getRvs($k = 1) {
 		$k /= 2;
 		$floork = floor($k);
 		$fractionalk = $k - $floork;
@@ -135,25 +133,30 @@ class ChiSquare extends ProbabilityDistribution {
 			$sumLogUniform += log(self::randFloat());
 		}
 
-		$m = 0;
-		$xi = 0;
-		$V = array(0);
-		do {
-			$m++;
+		if ($fractionalk > 0) {
+			$m = 0;
+			$xi = 0;
+			$V = array(0);
+			do {
+				$m++;
 
-			$V[] = self::randFloat();
-			$V[] = self::randFloat();
-			$V[] = self::randFloat();
+				$V[] = self::randFloat();
+				$V[] = self::randFloat();
+				$V[] = self::randFloat();
 
-			if ($V[3*$m - 2] <= M_E/(M_E + $fractionalk)) {
-				$xi = pow($V[3*$m - 1], 1/$fractionalk);
-				$eta = $V[3*$m]*pow($xi, $fractionalk - 1);
-			}
-			else {
-				$xi = 1 - log($V[3*$m - 1]);
-				$eta = $V[3*$m]*exp(-$xi);
-			}
-		} while($eta > pow($xi, $fractionalk - 1)*exp(-$xi));
+				if ($V[3*$m - 2] <= M_E/(M_E + $fractionalk)) {
+					$xi = pow($V[3*$m - 1], 1/$fractionalk);
+					$eta = $V[3*$m]*pow($xi, $fractionalk - 1);
+				}
+				else {
+					$xi = 1 - log($V[3*$m - 1]);
+					$eta = $V[3*$m]*exp(-$xi);
+				}
+			} while($eta > pow($xi, $fractionalk - 1)*exp(-$xi));
+		}
+		else {
+			$xi = 0;
+		}
 
 		return 2*($xi - $sumLogUniform);
 	}
@@ -166,7 +169,7 @@ class ChiSquare extends ProbabilityDistribution {
 	 * @return float The probability
 	 * @static
 	 */
-	static function getPdf($x, $k = 1) {
+	public static function getPdf($x, $k = 1) {
 		return pow($x, $k/2.0 - 1)*exp(-$x/2.0)/(\PHPStats\Stats::gamma($k/2.0)*pow(2, $k/2.0));
 	}
 	
@@ -178,7 +181,7 @@ class ChiSquare extends ProbabilityDistribution {
 	 * @return float The probability
 	 * @static
 	 */
-	static function getCdf($x, $k = 1) {
+	public static function getCdf($x, $k = 1) {
 		return \PHPStats\Stats::lowerGamma($k/2.0, $x/2)/\PHPStats\Stats::gamma($k/2.0);
 	}
 	
@@ -190,7 +193,7 @@ class ChiSquare extends ProbabilityDistribution {
 	 * @return float The probability
 	 * @static
 	 */
-	static function getSf($x, $k = 1) {
+	public static function getSf($x, $k = 1) {
 		return 1.0 - self::getCdf($x, $k);
 	}
 	
@@ -203,7 +206,7 @@ class ChiSquare extends ProbabilityDistribution {
 	 * @static
 	 * @todo Unimplemented dependencies
 	 */
-	static function getPpf($x, $k = 1) {
+	public static function getPpf($x, $k = 1) {
 		return 2 * \PHPStats\Stats::ilowerGamma($k / 2, $x * \PHPStats\Stats::gamma($k / 2));
 	}
 	
@@ -216,7 +219,7 @@ class ChiSquare extends ProbabilityDistribution {
 	 * @static
 	 * @todo Unimplemented dependencies
 	 */
-	static function getIsf($x, $k = 1) {
+	public static function getIsf($x, $k = 1) {
 		return self::getPpf(1.0 - $x, $k);
 	}
 	
@@ -228,7 +231,7 @@ class ChiSquare extends ProbabilityDistribution {
 	 * @return type array A dictionary containing the first four moments of the distribution
 	 * @static
 	 */
-	static function getStats($moments = 'mv', $k = 1) {
+	public static function getStats($moments = 'mv', $k = 1) {
 		$return = array();
 		
 		if (strpos($moments, 'm') !== FALSE) $return['mean'] = $k;

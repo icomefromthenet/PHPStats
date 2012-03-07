@@ -52,7 +52,6 @@ class DiscreteUniform extends ProbabilityDistribution {
 	 * Returns a random float between $minimum and $minimum plus $maximum
 	 * 
 	 * @return float The random variate.
-	 * @todo Untested
 	 */
 	public function rvs() {
 		return self::getRvs($this->minimum, $this->maximum);
@@ -66,6 +65,18 @@ class DiscreteUniform extends ProbabilityDistribution {
 	 */
 	public function pmf($x) {
 		return self::getPmf($x, $this->minimum, $this->maximum);
+	}
+	
+	/**
+	 * Probability Distribution function
+	 * 
+	 * Alias for pmf
+	 * 
+	 * @param float $x The test value
+	 * @return float The probability
+	 */
+	public function pdf($x) {
+		return self::pmf($x);
 	}
 	
 	/**
@@ -125,9 +136,8 @@ class DiscreteUniform extends ProbabilityDistribution {
 	 * @param float $maximum The maximum parameter.
 	 * @return float The random variate.
 	 * @static
-	 * @todo Untested
 	 */
-	static function getRvs($minimum = 0, $maximum = 1) {
+	public static function getRvs($minimum = 0, $maximum = 1) {
 		return mt_rand($minimum, $maximum);
 	}
 	
@@ -140,9 +150,24 @@ class DiscreteUniform extends ProbabilityDistribution {
 	 * @return float The probability
 	 * @static
 	 */
-	static function getPmf($x, $minimum = 0, $maximum = 1) {
+	public static function getPmf($x, $minimum = 0, $maximum = 1) {
 		if ($x >= $minimum && $x <= $maximum) return 1.0/($maximum - $minimum + 1);
 		else return 0.0;
+	}
+	
+	/**
+	 * Probability Distribution function
+	 * 
+	 * Alias for getPmf
+	 * 
+	 * @param float $x The test value
+	 * @param float $minimum The minimum parameter
+	 * @param float $maximum The maximum parameter
+	 * @return float The probability
+	 * @static
+	 */
+	public static function getPdf($x, $minimum = 0, $maximum = 1) {
+		return self::getPmf($x, $minimum, $maximum);
 	}
 	
 	/**
@@ -154,7 +179,7 @@ class DiscreteUniform extends ProbabilityDistribution {
 	 * @return float The probability
 	 * @static
 	 */
-	static function getCdf($x, $minimum = 0, $maximum = 1) {
+	public static function getCdf($x, $minimum = 0, $maximum = 1) {
 		if ($x >= $minimum && $x <= $maximum) return ($x - $minimum + 1) / ($maximum - $minimum + 1);
 		elseif ($x > $maximum) return 1.0;
 		else return 0.0;
@@ -169,7 +194,7 @@ class DiscreteUniform extends ProbabilityDistribution {
 	 * @return float The probability
 	 * @static
 	 */
-	static function getSf($x, $minimum = 0, $maximum = 1) {
+	public static function getSf($x, $minimum = 0, $maximum = 1) {
 		return 1.0 - self::getCdf($x, $minimum, $maximum);
 	}
 	
@@ -182,7 +207,7 @@ class DiscreteUniform extends ProbabilityDistribution {
 	 * @return float The value that gives a cdf of $x
 	 * @static
 	 */
-	static function getPpf($x, $minimum = 0, $maximum = 1) {
+	public static function getPpf($x, $minimum = 0, $maximum = 1) {
 		return ceil($x*($maximum - $minimum + 1));
 	}
 	
@@ -195,7 +220,7 @@ class DiscreteUniform extends ProbabilityDistribution {
 	 * @return float The value that gives an sf of $x
 	 * @static
 	 */
-	static function getIsf($x, $minimum = 0, $maximum = 1) {
+	public static function getIsf($x, $minimum = 0, $maximum = 1) {
 		return self::getPpf(1.0 - $x, $minimum, $maximum)+1;
 	}
 	
@@ -208,7 +233,7 @@ class DiscreteUniform extends ProbabilityDistribution {
 	 * @return type array A dictionary containing the first four moments of the distribution
 	 * @static
 	 */
-	static function getStats($moments = 'mv', $minimum = 0, $maximum = 1) {
+	public static function getStats($moments = 'mv', $minimum = 0, $maximum = 1) {
 		$return = array();
 		
 		if (strpos($moments, 'm') !== FALSE) $return['mean'] = 0.5*($maximum + $minimum);

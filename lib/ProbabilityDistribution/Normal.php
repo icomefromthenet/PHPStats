@@ -52,7 +52,6 @@ class Normal extends ProbabilityDistribution {
 	 * Returns a random float between $mu and $mu plus $variance
 	 * 
 	 * @return float The random variate.
-	 * @todo Untested
 	 */
 	public function rvs() {
 		return self::getRvs($this->mu, $this->variance);
@@ -125,12 +124,11 @@ class Normal extends ProbabilityDistribution {
 	 * @param float $variance The scale parameter. Default 1.0
 	 * @return float The random variate.
 	 * @static
-	 * @todo Untested
 	 */
-	static function getRvs($mu = 0.0, $variance = 1.0) {
+	public static function getRvs($mu = 0.0, $variance = 1.0) {
 		$u = self::randFloat();
 		$v = self::randFloat();
-		return sqrt(-2*log($u))*cos(2*M_PI*$v);
+		return $mu + sqrt($variance) * sqrt(-2 * log($u)) * cos(2 * M_PI * $v);
 	}
 	
 	/**
@@ -142,7 +140,7 @@ class Normal extends ProbabilityDistribution {
 	 * @return float The probability
 	 * @static
 	 */
-	static function getPdf($x, $mu = 0.0, $variance = 1.0) {
+	public static function getPdf($x, $mu = 0.0, $variance = 1.0) {
 		return exp(-pow($x - $mu, 2)/(2*$variance))/sqrt(2*M_PI*$variance);
 	}
 	
@@ -155,7 +153,7 @@ class Normal extends ProbabilityDistribution {
 	 * @return float The probability
 	 * @static
 	 */
-	static function getCdf($x, $mu = 0.0, $variance = 1.0) {
+	public static function getCdf($x, $mu = 0.0, $variance = 1.0) {
 		return (1 + \PHPStats\Stats::erf(($x - $mu)/sqrt(2*$variance)))/2;
 	}
 	
@@ -168,7 +166,7 @@ class Normal extends ProbabilityDistribution {
 	 * @return float The probability
 	 * @static
 	 */
-	static function getSf($x, $mu = 0.0, $variance = 1.0) {
+	public static function getSf($x, $mu = 0.0, $variance = 1.0) {
 		return 1.0 - self::getCdf($x, $mu, $variance);
 	}
 	
@@ -181,7 +179,7 @@ class Normal extends ProbabilityDistribution {
 	 * @return float The value that gives a cdf of $x
 	 * @static
 	 */
-	static function getPpf($x, $mu = 0.0, $variance = 1.0) {
+	public static function getPpf($x, $mu = 0.0, $variance = 1.0) {
 		return pow(2 * $variance, 0.5) * \PHPStats\Stats::ierf(2 * $x - 1) + $mu;
 	}
 	
@@ -194,7 +192,7 @@ class Normal extends ProbabilityDistribution {
 	 * @return float The value that gives an sf of $x
 	 * @static
 	 */
-	static function getIsf($x, $mu = 0.0, $variance = 1.0) {
+	public static function getIsf($x, $mu = 0.0, $variance = 1.0) {
 		return self::getPpf(1.0 - $x, $mu, $variance);
 	}
 	
@@ -207,7 +205,7 @@ class Normal extends ProbabilityDistribution {
 	 * @return type array A dictionary containing the first four moments of the distribution
 	 * @static
 	 */
-	static function getStats($moments = 'mv', $mu = 0.0, $variance = 1.0) {
+	public static function getStats($moments = 'mv', $mu = 0.0, $variance = 1.0) {
 		$return = array();
 		
 		if (strpos($moments, 'm') !== FALSE) $return['mean'] = $mu;

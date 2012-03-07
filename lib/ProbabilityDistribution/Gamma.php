@@ -54,7 +54,6 @@ class Gamma extends ProbabilityDistribution {
 	 * Returns a random float
 	 * 
 	 * @return float The random variate.
-	 * @todo Untested
 	 */
 	public function rvs() {
 		return self::getRvs($this->k, $this->theta);
@@ -129,9 +128,8 @@ class Gamma extends ProbabilityDistribution {
 	 * @param float $theta Scale parameter
 	 * @return float The random variate.
 	 * @static
-	 * @todo Untested
 	 */
-	static function getRvs($k = 1, $theta = 1) {
+	public static function getRvs($k = 1, $theta = 1) {
 		$floork = floor($k);
 		$fractionalk = $k - $floork;
 
@@ -140,25 +138,30 @@ class Gamma extends ProbabilityDistribution {
 			$sumLogUniform += log(self::randFloat());
 		}
 
-		$m = 0;
-		$xi = 0;
-		$V = array(0);
-		do {
-			$m++;
+		if ($fractionalk > 0) {
+			$m = 0;
+			$xi = 0;
+			$V = array(0);
+			do {
+				$m++;
 
-			$V[] = self::randFloat();
-			$V[] = self::randFloat();
-			$V[] = self::randFloat();
+				$V[] = self::randFloat();
+				$V[] = self::randFloat();
+				$V[] = self::randFloat();
 
-			if ($V[3*$m - 2] <= M_E/(M_E + $fractionalk)) {
-				$xi = pow($V[3*$m - 1], 1/$fractionalk);
-				$eta = $V[3*$m]*pow($xi, $fractionalk - 1);
-			}
-			else {
-				$xi = 1 - log($V[3*$m - 1]);
-				$eta = $V[3*$m]*exp(-$xi);
-			}
-		} while($eta > pow($xi, $fractionalk - 1)*exp(-$xi));
+				if ($V[3*$m - 2] <= M_E/(M_E + $fractionalk)) {
+					$xi = pow($V[3*$m - 1], 1/$fractionalk);
+					$eta = $V[3*$m]*pow($xi, $fractionalk - 1);
+				}
+				else {
+					$xi = 1 - log($V[3*$m - 1]);
+					$eta = $V[3*$m]*exp(-$xi);
+				}
+			} while($eta > pow($xi, $fractionalk - 1)*exp(-$xi));
+		}
+		else {
+			$xi = 0;
+		}
 
 		return $theta*($xi - $sumLogUniform);
 	}
@@ -172,7 +175,7 @@ class Gamma extends ProbabilityDistribution {
 	 * @return float The probability
 	 * @static
 	 */
-	static function getPdf($x, $k = 1, $theta = 1) {
+	public static function getPdf($x, $k = 1, $theta = 1) {
 		return pow($x, $k - 1)*exp(-$x/$theta)/(\PHPStats\Stats::gamma($k)*pow($theta, $k));
 	}
 	
@@ -185,7 +188,7 @@ class Gamma extends ProbabilityDistribution {
 	 * @return float The probability
 	 * @static
 	 */
-	static function getCdf($x, $k = 1, $theta = 1) {
+	public static function getCdf($x, $k = 1, $theta = 1) {
 		return \PHPStats\Stats::lowerGamma($k, $x/$theta)/\PHPStats\Stats::gamma($k);
 	}
 	
@@ -198,7 +201,7 @@ class Gamma extends ProbabilityDistribution {
 	 * @return float The probability
 	 * @static
 	 */
-	static function getSf($x, $k = 1, $theta = 1) {
+	public static function getSf($x, $k = 1, $theta = 1) {
 		return 1.0 - self::getCdf($x, $k, $theta);
 	}
 	
@@ -210,9 +213,8 @@ class Gamma extends ProbabilityDistribution {
 	 * @param float $theta Scale parameter
 	 * @return float The value that gives a cdf of $x
 	 * @static
-	 * @todo Unimplemented dependencies
 	 */
-	static function getPpf($x, $k = 1, $theta = 1) {
+	public static function getPpf($x, $k = 1, $theta = 1) {
 		return $theta * \PHPStats\Stats::ilowerGamma($k, \PHPStats\Stats::gamma($k) * $x);
 	}
 	
@@ -224,9 +226,8 @@ class Gamma extends ProbabilityDistribution {
 	 * @param float $theta Scale parameter
 	 * @return float The value that gives an sf of $x
 	 * @static
-	 * @todo Unimplemented dependencies
 	 */
-	static function getIsf($x, $k = 1, $theta = 1) {
+	public static function getIsf($x, $k = 1, $theta = 1) {
 		return self::getPpf(1.0 - $x, $k, $theta);
 	}
 	
@@ -239,7 +240,7 @@ class Gamma extends ProbabilityDistribution {
 	 * @return type array A dictionary containing the first four moments of the distribution
 	 * @static
 	 */
-	static function getStats($moments = 'mv', $k = 1, $theta = 1) {
+	public static function getStats($moments = 'mv', $k = 1, $theta = 1) {
 		$return = array();
 		
 		if (strpos($moments, 'm') !== FALSE) $return['mean'] = $k*$theta;

@@ -52,7 +52,6 @@ class ContinuousUniform extends ProbabilityDistribution {
 	 * Returns a random float between $minimum and $minimum plus $maximum
 	 * 
 	 * @return float The random variate.
-	 * @todo Untested
 	 */
 	public function rvs() {
 		return self::getRvs($this->minimum, $this->maximum);
@@ -125,9 +124,8 @@ class ContinuousUniform extends ProbabilityDistribution {
 	 * @param float $maximum The maximum parameter. Default 1.0
 	 * @return float The random variate.
 	 * @static
-	 * @todo Untested
 	 */
-	static function getRvs($minimum = 0.0, $maximum = 1.0) {
+	public static function getRvs($minimum = 0.0, $maximum = 1.0) {
 		return self::randFloat()*($maximum-$minimum) + $minimum;
 	}
 	
@@ -140,7 +138,7 @@ class ContinuousUniform extends ProbabilityDistribution {
 	 * @return float The probability
 	 * @static
 	 */
-	static function getPdf($x, $minimum = 0.0, $maximum = 1.0) {
+	public static function getPdf($x, $minimum = 0.0, $maximum = 1.0) {
 		if ($x >= $minimum && $x <= $maximum) return 1.0/($maximum - $minimum);
 		else return 0.0;
 	}
@@ -154,7 +152,7 @@ class ContinuousUniform extends ProbabilityDistribution {
 	 * @return float The probability
 	 * @static
 	 */
-	static function getCdf($x, $minimum = 0.0, $maximum = 1.0) {
+	public static function getCdf($x, $minimum = 0.0, $maximum = 1.0) {
 		if ($x >= $minimum && $x <= $maximum) return ($x - $minimum) / ($maximum - $minimum);
 		elseif ($x > $maximum) return 1.0;
 		else return 0.0;
@@ -169,7 +167,7 @@ class ContinuousUniform extends ProbabilityDistribution {
 	 * @return float The probability
 	 * @static
 	 */
-	static function getSf($x, $minimum = 0.0, $maximum = 1.0) {
+	public static function getSf($x, $minimum = 0.0, $maximum = 1.0) {
 		return 1.0 - self::getCdf($x, $minimum, $maximum);
 	}
 	
@@ -182,7 +180,7 @@ class ContinuousUniform extends ProbabilityDistribution {
 	 * @return float The value that gives a cdf of $x
 	 * @static
 	 */
-	static function getPpf($x, $minimum = 0.0, $maximum = 1.0) {
+	public static function getPpf($x, $minimum = 0.0, $maximum = 1.0) {
 		return $minimum + $x*($maximum - $minimum);
 	}
 	
@@ -195,7 +193,7 @@ class ContinuousUniform extends ProbabilityDistribution {
 	 * @return float The value that gives an sf of $x
 	 * @static
 	 */
-	static function getIsf($x, $minimum = 0.0, $maximum = 1.0) {
+	public static function getIsf($x, $minimum = 0.0, $maximum = 1.0) {
 		return self::getPpf(1.0 - $x, $minimum, $maximum);
 	}
 	
@@ -208,7 +206,7 @@ class ContinuousUniform extends ProbabilityDistribution {
 	 * @return type array A dictionary containing the first four moments of the distribution
 	 * @static
 	 */
-	static function getStats($moments = 'mv', $minimum = 0.0, $maximum = 1.0) {
+	public static function getStats($moments = 'mv', $minimum = 0.0, $maximum = 1.0) {
 		$return = array();
 		
 		if (strpos($moments, 'm') !== FALSE) $return['mean'] = 0.5*($maximum + $minimum);

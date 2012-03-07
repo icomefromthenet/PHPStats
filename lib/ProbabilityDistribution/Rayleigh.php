@@ -51,7 +51,6 @@ class Rayleigh extends ProbabilityDistribution {
 	 * Returns a random float
 	 * 
 	 * @return float The random variate.
-	 * @todo Untested
 	 */
 	public function rvs() {
 		return self::getRvs($this->sigma);
@@ -122,17 +121,19 @@ class Rayleigh extends ProbabilityDistribution {
 	}
 	
 	/**
-	 * Returns a random float between $sigma and $sigma plus $k
+	 * Returns a Rayleigh-distributed random variable
 	 * 
 	 * @param float $sigma The scale parameter
 	 * @return float The random variate
 	 * @static
-	 * @todo Untested
 	 */
-	static function getRvs($sigma = 1) {
-		$u = self::randFloat();
-		if ($u == 0) return 0;
-		else return $sigma*sqrt(-2*log($u));
+	public static function getRvs($sigma = 1) {
+		$u = 0;
+		while ($u == 0) {
+			$u = self::randFloat();
+		}
+
+		return $sigma*sqrt(-2*log($u));
 	}
 	
 	/**
@@ -143,7 +144,7 @@ class Rayleigh extends ProbabilityDistribution {
 	 * @return float The probability
 	 * @static
 	 */
-	static function getPdf($x, $sigma = 1) {
+	public static function getPdf($x, $sigma = 1) {
 		return $x * exp( -pow($x, 2) / (2*pow($sigma, 2)) ) / pow($sigma, 2);
 	}
 	
@@ -155,7 +156,7 @@ class Rayleigh extends ProbabilityDistribution {
 	 * @return float The probability
 	 * @static
 	 */
-	static function getCdf($x, $sigma = 1) {
+	public static function getCdf($x, $sigma = 1) {
 		return 1 - exp( -pow($x, 2)/(2*pow($sigma, 2)) );
 	}
 	
@@ -167,7 +168,7 @@ class Rayleigh extends ProbabilityDistribution {
 	 * @return float The probability
 	 * @static
 	 */
-	static function getSf($x, $sigma = 1) {
+	public static function getSf($x, $sigma = 1) {
 		return 1.0 - self::getCdf($x, $sigma);
 	}
 	
@@ -179,7 +180,7 @@ class Rayleigh extends ProbabilityDistribution {
 	 * @return float The value that gives a cdf of $x
 	 * @static
 	 */
-	static function getPpf($x, $sigma = 1) {
+	public static function getPpf($x, $sigma = 1) {
 		$lambda = self::convertSigmaToLambda($sigma);
 		return \PHPStats\ProbabilityDistribution\Weibull::getPpf($x, $lambda, 2);
 	}
@@ -192,7 +193,7 @@ class Rayleigh extends ProbabilityDistribution {
 	 * @return float The value that gives an sf of $x
 	 * @static
 	 */
-	static function getIsf($x, $sigma = 1) {
+	public static function getIsf($x, $sigma = 1) {
 		return self::getPpf(1.0 - $x, $sigma);
 	}
 	
@@ -204,7 +205,7 @@ class Rayleigh extends ProbabilityDistribution {
 	 * @return type array A dictionary containing the first four moments of the distribution
 	 * @static
 	 */
-	static function getStats($moments = 'mv', $sigma = 1) {
+	public static function getStats($moments = 'mv', $sigma = 1) {
 		$lambda = self::convertSigmaToLambda($sigma);
 		return \PHPStats\ProbabilityDistribution\Weibull::getStats($moments, $lambda, 2);
 	}

@@ -30,7 +30,7 @@ namespace PHPStats;
  * 
  * Static class containing a variety of useful statistical functions.  
  * Fills in where PHP's math functions fall short.  Many functions are
- * Used extensively by the probability distributions.
+ * used extensively by the probability distributions.
  */
 class Stats {
 	//Useful to tell if a float has a mathematically integer value.
@@ -77,7 +77,7 @@ class Stats {
 	/**
 	 * Average Function
 	 * 
-	 * Takes the arithmetic mean of tan array of numeric values.
+	 * Takes the arithmetic mean of an array of numeric values.
 	 * Non-numeric values are treated as zeroes.
 	 * 
 	 * @param array $data An array of numeric values
@@ -284,6 +284,8 @@ class Stats {
 	 * @static
 	 */
 	public static function erf($x) {
+		if ($x < 0) return -self::erf(-$x);
+
 		$t = 1 / (1 + 0.3275911 * $x);
 		return 1 - (0.254829592*$t - 0.284496736*pow($t, 2) + 1.421413741*pow($t, 3) + -1.453152027*pow($t, 4) + 1.061405429*pow($t, 5))*exp(-pow($x, 2));
 	}
@@ -370,19 +372,26 @@ class Stats {
 	/**
 	 * Inverse gamma function
 	 * 
-	 * Returns the inverse of the gamma function
+	 * Returns the inverse of the gamma function.  The relative error of the
+	 * principal branch peaks at 1.5 near the lower bound (i.e. igamma(0.885603))
+	 * and approaches zero the higher the argument to this function.
+	 * The secondary branch is not fully covered by the approximation and so
+	 * will have much higher error.
 	 * 
 	 * @param float $x The result of the gamma function
+	 * @param bool $principal True for the principal branch, false for the secondary (e.g. gamma(x) where x < 1.461632)
 	 * @return float The argument to the gamma function
 	 * @static
-	 * @todo Implement this
 	 */
-	public static function igamma($x) {
-		//Source: http://mathoverflow.net/questions/12828/inverse-gamma-function
-		//$k = 1.461632; //self::digamma(0); //Commented as a definition for the approximated constant given below
+	public static function igamma($x, $principal = true) {
+		//Source: http://mathforum.org/kb/message.jspa?messageID=342551&tstart=0
+		
+		if ($x < 0.885603) return NAN;  // gamma(1.461632) == 0.885603, the positive minimum of gamma
+		
+		//$k = 1.461632;
 		$c = 0.036534; //pow(2*M_PI, 0.5)/M_E - self::gamma($k);
-		$lx = log(($x + $c)/pow(2*M_PI, 0.5));
-		return $lx / self::lambert($lx/M_E) + 0.5;
+		$lx = log(($x + $c)/2.506628274631); //pow(2*M_PI, 0.5)); == 2.506628274631
+		return $lx / self::lambert($lx/M_E, $principal) + 0.5;
 	}
 
 	/**
@@ -393,11 +402,34 @@ class Stats {
 	 * @param float $x Argument to the digamma function
 	 * @return The result of the digamma function
 	 * @static
-	 * @todo Implement this
 	 */
 	public static function digamma($x) {
-		//Source: http://en.wikipedia.org/wiki/Digamma_function#Computation_.26_approximation
-		return log($x) - 1/(2*$x) - 1/(12*pow($x, 2)) + 1/(120*pow($x, 4)) - 1/(252*pow($x, 6)) + (1/pow($x, 8));
+		//Algorithm translated from http://www.uv.es/~bernardo/1976AppStatist.pdf
+		$s = 1.0e-5;
+		$c = 8.5;
+		$s3 = 8.33333333e-2;
+		$s4 = 8.33333333e-3;
+		$s5 = 3.968253968e-2;
+		$d1 = -0.5772156649;
+
+		$y = $x;
+		$retval = 0;
+
+		if ($y <= 0) return NAN;
+
+		if ($y <= $s) return $d1 - 1/$y;
+
+		while ($y < $c) {
+			$retval = $retval - 1/$y;
+			$y++;
+		}
+
+		$r = 1/$y;
+		$retval = $retval + log($y) - 0.5 * $r;
+		$r *= $r;
+		$retval = $retval - $r * ($s3 - $r * ($s4 - $r *$s5));
+
+		return $retval;
 	}
 
 	/**
@@ -406,20 +438,31 @@ class Stats {
 	 * Returns the positive branch of the lambert function
 	 * 
 	 * @param float $x Argument to the lambert funcction
+	 * @param bool $principal True to use the principal branch, false to use the secondary
 	 * @return float The result of the lambert function
 	 * @static
-	 * @todo Implement this
 	 */
-	public static function lambert($x) {
-		//Source: http://en.wikipedia.org/wiki/Lambert_W_function#Numerical_evaluation
-		$w = 2; //Best initial guess
-		//TODO: Limit the loop by the precision of the answer, not an arbitrary number of iterations
-		$i = 0;
-		while ($i < 10)
-		{
-			$w = $w - ($w*exp($w) - $x)/(exp($w) + $w*exp($w));
-			$i++;
+	public static function lambert($x, $principal = true) {
+		// http://www.whim.org/nebula/math/lambertw.html
+		
+		if ($principal) {
+			if ($x > 10) $w = log($x) - log(log($x));
+			elseif ($x > -1/M_E) $w = 0;
+			else return NAN; //Undefined below -1/e
 		}
+		else { //Secondary
+			if ($x >= -1/M_E && $x <= -0.1) $w = -2;
+			elseif ($x > -0.1 && $x < 0) $w = log(-$x) - log(-log(-x));
+			else return NAN; //Defined only for [-1/e, 0)
+		}
+		
+		for ($k = 1; $k < 150; ++$k) {
+			$old_w = $w;
+			$w = ($x*exp(-$w) + pow($w, 2))/($w + 1);
+			
+			if (abs($w - $old_w) < 0.0000001) break;
+		}
+		
 		return $w;
 	}
 	
@@ -434,16 +477,45 @@ class Stats {
 	 * @static
 	 */
 	public static function lowerGamma($s, $x) {
-		//Special thanks to http://www.reddit.com/user/harlows_monkeys for this algorithm.
-		if ($x == 0) return 0;
-		$t = exp($s*log($x)) / $s;
-		$v = $t;
-		for ($k = 1; $k < 150; ++$k) {
-			$t = -$t * $x * ($s + $k - 1) / (($s + $k) * $k);
-			$v += $t;
-			if (abs($t) < 0.00000000001) break;
+		//Adapted from jStat
+		$aln = self::gammaln($s);
+		$afn = self::gamma($s);
+		$ap = $s;
+		$sum = 1 / $s;
+		$del = $sum;
+
+		$afix = ($s >= 1 )?$s:1 / $s;
+		$ITMAX = floor(log($afix) * 8.5 + $s * 0.4 + 17);
+
+		if ($x < 0 || $s <= 0 ) {
+			return NAN;
 		}
-		return $v;
+		elseif ($x < $s + 1 ) {
+			for ($i = 1; $i <= $ITMAX; $i++) {
+				$sum += $del *= $x / ++$ap;
+			}
+
+			$endval = $sum * exp(-$x + $s * log($x) - ($aln));
+		}
+		else {
+			$b = $x + 1 - $s;
+			$c = 1 / 1.0e-30;
+			$d = 1 / $b;
+			$h = $d;
+
+			for ($i = 1; $i <= $ITMAX; $i++) {
+				$an = -$i * ($i - $s);
+				$b += 2;
+				$d = $an * $d + $b;
+				$c = $b + $an / $c;
+				$d = 1 / $d;
+				$h *= $d * $c;
+			}
+
+			$endval = 1 - $h * exp(-$x + $s * log($x) - ($aln));
+		}
+
+		return $endval * $afn;
 	}
 	
 	/**
@@ -455,10 +527,23 @@ class Stats {
 	 * @param float $x Result of the lower gamma function.
 	 * @return float The argument to the lower gamma function that would return $x
 	 * @static
-	 * @todo Implement this
 	 */
 	public static function ilowerGamma($s, $x) {
-		return 0;
+		$precision = 8;
+		$guess = array(0, 20);
+		$IT_MAX = 1000;
+		$i = 1;
+
+		while (round($guess[$i], $precision) != round($guess[$i - 1], $precision) && $i < $IT_MAX) {
+			$f = self::lowerGamma($s, $guess[$i]);
+			$f2 = self::lowerGamma($s, $guess[$i - 1]);
+			$fp = ($f - $f2) / ($guess[$i] - $guess[$i - 1]);
+
+			$guess[] = $guess[$i - 1] - $f / $fp;
+			$i++;
+		}
+
+		return $guess[$i - 1];
 	}
 	
 	/**

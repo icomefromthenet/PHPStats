@@ -29,6 +29,15 @@ class StatisticalTestsTest extends PHPUnit_Framework_TestCase {
 	}
 
 	public function test_chiSquareTest() {
+		$this->assertEquals(0.0003, round(StatisticalTests::chiSquareTest(array(200, 150, 50, 250, 300, 50), array(180, 180, 40, 270, 270, 60), 2), 4));
+	}
+
+	public function test_kolmogorovSmirnov() {
+	}
+
+	public function test_kolmogorovCDF() {
+		$this->assertEquals(0.73, round(StatisticalTests::kolmogorovCDF(1), 5));
+		$this->assertEquals(0.99933, round(StatisticalTests::kolmogorovCDF(2), 5));
+		$this->assertEquals(0.03605, round(StatisticalTests::kolmogorovCDF(0.5), 5));
 	}
 }
-?>

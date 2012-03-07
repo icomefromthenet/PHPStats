@@ -55,7 +55,6 @@ class Weibull extends ProbabilityDistribution {
 	 * Returns a random float between $lambda and $lambda plus $k
 	 * 
 	 * @return float The random variate.
-	 * @todo Untested
 	 */
 	public function rvs() {
 		return self::getRvs($this->lambda, $this->k);
@@ -128,11 +127,10 @@ class Weibull extends ProbabilityDistribution {
 	 * @param float $k The shape parameter. Default 1.0
 	 * @return float The random variate.
 	 * @static
-	 * @todo Untested
 	 */
-	static function getRvs($lambda = 1, $k = 1) {
+	public static function getRvs($lambda = 1, $k = 1) {
 		$e = \PHPStats\ProbabilityDistribution\Exponential::getRvs(1);
-		return ($e == 0)? 0 : $lambda * $pow($e, 1/$k);
+		return ($e == 0)? 0 : $lambda * pow($e, 1/$k);
 	}
 	
 	/**
@@ -144,7 +142,7 @@ class Weibull extends ProbabilityDistribution {
 	 * @return float The probability
 	 * @static
 	 */
-	static function getPdf($x, $lambda = 1, $k = 1) {
+	public static function getPdf($x, $lambda = 1, $k = 1) {
 		if ($x >= 0) return ($k / $lambda) * pow($x / $lambda, $k - 1)*exp(-pow($x / $lambda, $k));
 		else return 0.0;
 	}
@@ -158,7 +156,7 @@ class Weibull extends ProbabilityDistribution {
 	 * @return float The probability
 	 * @static
 	 */
-	static function getCdf($x, $lambda = 1, $k = 1) {
+	public static function getCdf($x, $lambda = 1, $k = 1) {
 		return 1 - exp(-pow($x / $lambda, $k));
 	}
 	
@@ -171,7 +169,7 @@ class Weibull extends ProbabilityDistribution {
 	 * @return float The probability
 	 * @static
 	 */
-	static function getSf($x, $lambda = 1, $k = 1) {
+	public static function getSf($x, $lambda = 1, $k = 1) {
 		return 1.0 - self::getCdf($x, $lambda, $k);
 	}
 	
@@ -184,7 +182,7 @@ class Weibull extends ProbabilityDistribution {
 	 * @return float The value that gives a cdf of $x
 	 * @static
 	 */
-	static function getPpf($x, $lambda = 1, $k = 1) {
+	public static function getPpf($x, $lambda = 1, $k = 1) {
 		return $lambda * pow(-log(1 - $x), 1 / $k);
 	}
 	
@@ -197,7 +195,7 @@ class Weibull extends ProbabilityDistribution {
 	 * @return float The value that gives an sf of $x
 	 * @static
 	 */
-	static function getIsf($x, $lambda = 1, $k = 1) {
+	public static function getIsf($x, $lambda = 1, $k = 1) {
 		return self::getPpf(1.0 - $x, $lambda, $k);
 	}
 	
@@ -210,7 +208,7 @@ class Weibull extends ProbabilityDistribution {
 	 * @return type array A dictionary containing the first four moments of the distribution
 	 * @static
 	 */
-	static function getStats($moments = 'mv', $lambda = 1, $k = 1) {
+	public static function getStats($moments = 'mv', $lambda = 1, $k = 1) {
 		$return = array();
 		
 		if (strpos($moments, 'm') !== FALSE) $return['mean'] = $lambda*\PHPStats\Stats::gamma(1 + 1/$k);

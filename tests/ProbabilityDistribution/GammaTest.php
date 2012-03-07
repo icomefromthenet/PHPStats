@@ -2,6 +2,7 @@
 require_once('lib/Stats.php');
 require_once('lib/ProbabilityDistribution/ProbabilityDistribution.php');
 require_once('lib/ProbabilityDistribution/Gamma.php');
+require_once('lib/StatisticalTests.php');
 
 use \PHPStats\ProbabilityDistribution\Gamma as Gamma;
 
@@ -13,7 +14,10 @@ class GammaTest extends PHPUnit_Framework_TestCase {
 	}
 
 	public function test_rvs() {
-		//$this->assertEquals(, $this->testObject->rvs());
+		$variates = array();
+		for ($i = 0; $i < 10000; $i++) $variates[] = $this->testObject->rvs();
+		$this->assertGreaterThanOrEqual(0.01, \PHPStats\StatisticalTests::kolmogorovSmirnov($variates, $this->testObject));
+		$this->assertLessThanOrEqual(0.99, \PHPStats\StatisticalTests::kolmogorovSmirnov($variates, $this->testObject));
 	}
 
 	public function test_pdf() {
@@ -31,7 +35,7 @@ class GammaTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals(0.1, round($this->testObject->sf(71.03), 5));
 	}
 
-	/*public function test_ppf() {
+	public function test_ppf() {
 		$this->assertEquals(48.3436, round($this->testObject->ppf(0.5), 4));
 		$this->assertEquals(71.03, round($this->testObject->ppf(0.9), 2));
 	}
@@ -39,7 +43,7 @@ class GammaTest extends PHPUnit_Framework_TestCase {
 	public function test_isf() {
 		$this->assertEquals(48.3436, round($this->testObject->isf(0.5), 5));
 		$this->assertEquals(71.03, round($this->testObject->isf(0.1), 5));
-	}*/
+	}
 
 	public function test_stats() {
 		$summaryStats = $this->testObject->stats('mvsk');

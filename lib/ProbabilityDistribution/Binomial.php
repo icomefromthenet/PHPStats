@@ -52,7 +52,6 @@ class Binomial extends ProbabilityDistribution {
 	 * Returns a random variate of $n trials at $p probability each
 	 * 
 	 * @return float The random variate.
-	 * @todo Untested
 	 */
 	public function rvs() {
 		return self::getRvs($this->p, $this->n);
@@ -66,6 +65,18 @@ class Binomial extends ProbabilityDistribution {
 	 */
 	public function pmf($x) {
 		return self::getPmf($x, $this->p, $this->n);
+	}
+	
+	/**
+	 * Probability Distribution function
+	 * 
+	 * Alias for pmf
+	 * 
+	 * @param float $x The test value
+	 * @return float The probability
+	 */
+	public function pdf($x) {
+		return self::pmf($x);
 	}
 	
 	/**
@@ -125,7 +136,6 @@ class Binomial extends ProbabilityDistribution {
 	 * @param int $n The number of trials.
 	 * @return float The random variate.
 	 * @static
-	 * @todo Untested
 	 */
 	public static function getRvs($p = 0.5, $n = 1) {
 		$successes = 0;
@@ -148,6 +158,20 @@ class Binomial extends ProbabilityDistribution {
 	 */
 	public static function getPmf($x, $p = 0.5, $n = 1) {
 		return \PHPStats\Stats::combinations($n, $x)*pow($p, $x)*pow(1 - $p, $n - $x);
+	}
+	
+	/**
+	 * Probability Distribution function
+	 * 
+	 * Alias for getPmf
+	 * 
+	 * @param float $x The test value
+	 * @param float $lambda The rate of events
+	 * @return float The probability
+	 * @static
+	 */
+	public static function getPdf($x, $p = 0.5, $n = 1) {
+		return self::getPmf($x, $p, $n);
 	}
 	
 	/**

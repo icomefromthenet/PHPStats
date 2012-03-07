@@ -52,7 +52,6 @@ class F extends ProbabilityDistribution {
 	 * Returns a random float between $d1 and $d1 plus $d2
 	 * 
 	 * @return float The random variate.
-	 * @todo Untested
 	 */
 	public function rvs() {
 		return self::getRvs($this->d1, $this->d2);
@@ -125,12 +124,11 @@ class F extends ProbabilityDistribution {
 	 * @param float $d2 Degrees of freedom 2. Default 1.0
 	 * @return float The random variate.
 	 * @static
-	 * @todo Untested
 	 */
-	static function getRvs($d1 = 1, $d2 = 1) {
+	public static function getRvs($d1 = 1, $d2 = 1) {
 		$x = \PHPStats\ProbabilityDistribution\ChiSquare::getRvs($d1);
 		$y = \PHPStats\ProbabilityDistribution\ChiSquare::getRvs($d2);
-		return ($x / $df1) / ($y / $df2);
+		return ($x / $d1) / ($y / $d2);
 	}
 	
 	/**
@@ -142,7 +140,7 @@ class F extends ProbabilityDistribution {
 	 * @return float The probability
 	 * @static
 	 */
-	static function getPdf($x, $d1 = 1, $d2 = 1) {
+	public static function getPdf($x, $d1 = 1, $d2 = 1) {
 		return pow((pow($d1 * $x, $d1) * pow($d2, $d2))/(pow($d1 * $x + $d2, $d1 + $d2)), 0.5)/($x * \PHPStats\Stats::beta($d1 / 2, $d2 / 2));
 	}
 	
@@ -155,7 +153,7 @@ class F extends ProbabilityDistribution {
 	 * @return float The probability
 	 * @static
 	 */
-	static function getCdf($x, $d1 = 1, $d2 = 1) {
+	public static function getCdf($x, $d1 = 1, $d2 = 1) {
 		return \PHPStats\Stats::regularizedIncompleteBeta($d1 / 2, $d2 / 2, ($d1 * $x)/($d1 * $x + $d2));
 	}
 	
@@ -168,7 +166,7 @@ class F extends ProbabilityDistribution {
 	 * @return float The probability
 	 * @static
 	 */
-	static function getSf($x, $d1 = 1, $d2 = 1) {
+	public static function getSf($x, $d1 = 1, $d2 = 1) {
 		return 1.0 - self::getCdf($x, $d1, $d2);
 	}
 	
@@ -181,7 +179,7 @@ class F extends ProbabilityDistribution {
 	 * @return float The value that gives a cdf of $x
 	 * @static
 	 */
-	static function getPpf($x, $d1 = 1, $d2 = 1) {
+	public static function getPpf($x, $d1 = 1, $d2 = 1) {
 		$iY = \PHPStats\Stats::iregularizedIncompleteBeta($d1/2, $d2/2, $x);
 		return -($d2*$iY) / ($d1 * ($iY - 1));
 	}
@@ -195,7 +193,7 @@ class F extends ProbabilityDistribution {
 	 * @return float The value that gives an sf of $x
 	 * @static
 	 */
-	static function getIsf($x, $d1 = 1, $d2 = 1) {
+	public static function getIsf($x, $d1 = 1, $d2 = 1) {
 		return self::getPpf(1.0 - $x, $d1, $d2);
 	}
 	
@@ -208,7 +206,7 @@ class F extends ProbabilityDistribution {
 	 * @return type array A dictionary containing the first four moments of the distribution
 	 * @static
 	 */
-	static function getStats($moments = 'mv', $d1 = 1, $d2 = 1) {
+	public static function getStats($moments = 'mv', $d1 = 1, $d2 = 1) {
 		$return = array();
 		
 		if (strpos($moments, 'm') !== FALSE) {
