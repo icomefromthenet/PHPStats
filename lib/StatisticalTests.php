@@ -149,30 +149,17 @@ class StatisticalTests {
 	 * Kolmogorov CDF
 	 * 
 	 * Tests whether a collection of random variates conform to the given
-	 * distribution. Error<.0000001
+	 * distribution.
 	 * 
 	 * @param float $x The K test statistic
 	 * @return float The probability of getting our test statistic or less
 	 * @static
 	 */
 	public static function kolmogorovCDF($x) {
-		//Republished with permission from Prof. Tom Ferguson of UCLA, originally found at:
-		//http://www.math.ucla.edu/~tom/distributions/Kolmogorov.html
-		if ($x < 0.27) {
-			return 0;
-		}
-		else if ($x > 3.2) {
-			return 1;
-		}
-		else {
-			$ks = 0;
-			$y = -2 * $x * $x;
-			
-			for($i = 27; $i >= 1; $i -= 2) {
-				$ks = exp($i * $y) * (1 - $ks);
-			}
-			
-			return 1 - 2 * $ks;
-		}
+		$sum = 0;
+
+		for ($i = 1; $i < 8; $i++) $sum += exp(-pow(2 * $i - 1, 2) * pow(M_PI, 2) / (8 * pow($x, 2)));
+
+		return sqrt(2 * M_PI) * $sum / $x;
 	}
 }
