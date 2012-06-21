@@ -57,13 +57,14 @@ class Matrix {
 	/**
 	 * Constructor function
 	 * 
-	 * Creates a new matrix object.  If given a pair of numbers, this will
-	 * return a zero-filled matrix with ones running down the diagonal, i.e.
-	 * an identity matrix if the matrix is square.  If given a string like
-	 * '[1, 2, 3; 4, 5, 6; 7, 8, 9]' as the first argument, then it will
-	 * attempt to construct a matrix using the supplied values.
+	 * Creates a new matrix object.  As an example, when given a string like
+	 * '[1, 2, 3; 4, 5, 6; 7, 8, 9]', then it will construct a new matrix
+	 * with 1, 2, and 3 as the values of the first row and 7, 8, and 9
+	 * as the values of the last row.
+	 * Also accepts arrays, so array(array(1, 2, 3), array(4, 5, 6) array(7, 8, 9)
+	 * is equivalent to the above example.
 	 * 
-	 * @param string $ A string representing a matrix literal
+	 * @param string $ A string representing a matrix literal or an array to convert into a matrix
 	 * @return matrix A new matrix object.
 	 */
 	public function __construct($literal) {
@@ -84,6 +85,31 @@ class Matrix {
 					$j++;
 				}
 				
+				$i++;
+			}
+		}
+		else if (is_array($literal)) {
+			$columns = 0;
+			foreach ($literal as $row) {
+				$columns = max($columns, count($row));
+			}
+
+			$i = 0;
+			foreach ($literal as $row) {
+				if(!is_array($row)) throw new MatrixException('Non-array row definition in array-based matrix construction.');
+
+				$this->matrix[$i] = array();
+				$j = 0;
+
+				foreach ($row as $element) {
+					$this->matrix[$i][$j] = $element;
+					$j++;
+				}
+
+				for (; $j < $columns; $j++) { //Zero fill incomplete rows
+					$this->matrix[$i][$j] = 0;
+				}
+
 				$i++;
 			}
 		}

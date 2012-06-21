@@ -13,7 +13,7 @@
  * To download PHPStats visit
  * <a href="https://github.com/mcordingley/PHPStats">the GitHub page</a>
  * for the latest code or download the
- * <a href="https://github.com/mcordingley/PHPStats/zipball/v0.3">current stable version</a>.
+ * <a href="https://github.com/mcordingley/PHPStats/zipball/v0.4">current stable version</a>.
  * 
  * @section installing Installation
  * Installing PHPStats is easy.  Just copy the PHPStats.phar file into the
@@ -27,27 +27,31 @@
  * $beta = new \PHPStats\ProbabilityDistribution\Beta(6,20);
  * 
  * If performance is a concern, files can be pre-emptively loaded, rather than
- * waiting for the autoload functionality.  To pre-load the Beta class file, call:
- * include('phar://PHPStats/ProbabilityDistribution/Beta.php');
+ * waiting for the autoload functionality.  For example, to pre-load the Beta class
+ * file, call: include('phar://PHPStats.phar/lib/ProbabilityDistribution/Beta.php');
  * 
  * @section dependencies Dependencies
  * PHPStats is written to work with PHP 5.3 and greater, as it makes heavy use
  * of features introduced in PHP 5.3.  No other run-time dependencies exist.
  * 
  * Build dependencies include both Phing and PHPUnit.  When attempting to build
- * this library, beware that the tests for the random variate functions are
+ * this library, be aware that the tests for the random variate functions are
  * probabalistic in nature and will fail on occasion.
- * 
- * PHPStats is written to work with PHP 5.3 and greater, as it makes heavy use
- * of features introduced in PHP 5.3.  While this does exclude a number of
- * older installations of PHP, the library is still under development and will
- * not be properly complete until PHP 5.3 has been out for a while.
  * 
  * @section license License
  * PHPStats is released under the LGPL version 3 or later.  For more details,
  * please refer to the copy of LICENSE.txt that accompanies your download.
  * 
  * @section changelog Change Log
+ * 
+ *
+ * v0.4
+ * 
+ * Added Levy distribution
+ * 
+ * Added Kmeans clustering
+ * 
+ * Matrix constructor now optionally takes arrays
  * 
  * 
  * v0.3

@@ -139,7 +139,8 @@ class StatisticalTests {
 		sort($observations);
 
 		for ($i = 1; $i <= $n; $i++) {
-			$d = max($d, abs(($i)/$n - $distribution->cdf($observations[$i - 1])), $distribution->cdf($observations[$i - 1]) - ($i - 1)/$n);
+			$cdf = $distribution->cdf($observations[$i - 1]);
+			$d = max($d, abs(($i)/$n - $cdf), $cdf - ($i - 1) / $n);
 		}
 
 		return 1 - self::kolmogorovCDF(sqrt($n) * $d);

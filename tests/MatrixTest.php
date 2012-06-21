@@ -10,10 +10,24 @@ use \PHPStats\Matrix as Matrix;
 class MatrixTest extends PHPUnit_Framework_TestCase {
 	private $matrixA;
 	private $matrixB;
+	private $matrixC;
 	
 	function __construct() {
 		$this->matrixA = new Matrix('[1, 2, 3, 4; 5, 6, 7, 8; 9, 10, 11, 12; 13, 14, 15, 16]');
 		$this->matrixB = new Matrix('[3, 6, 2, 7; 4, 1, 6, 3; 8, 5, 8, 3; 1, 7, 9, 0]');
+		$this->matrixC = new Matrix(array(array(1, 2, 3), array(4, 5, 6), array(7, 8)));
+	}
+
+	function test_arrayConstruct() {
+		$this->assertEquals(1, $this->matrixC->getElement(1, 1));
+		$this->assertEquals(2, $this->matrixC->getElement(1, 2));
+		$this->assertEquals(3, $this->matrixC->getElement(1, 3));
+		$this->assertEquals(4, $this->matrixC->getElement(2, 1));
+		$this->assertEquals(5, $this->matrixC->getElement(2, 2));
+		$this->assertEquals(6, $this->matrixC->getElement(2, 3));
+		$this->assertEquals(7, $this->matrixC->getElement(3, 1));
+		$this->assertEquals(8, $this->matrixC->getElement(3, 2));
+		$this->assertEquals(0, $this->matrixC->getElement(3, 3));
 	}
 	
 	function test_getElement() {
