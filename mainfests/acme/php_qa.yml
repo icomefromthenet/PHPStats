@@ -1,0 +1,11 @@
+---
+# install QA tools
+
+- hosts: webserver
+  user: vagrant
+  sudo: True
+
+  tasks:
+    - include: ../tasks/php_qa.yml
+  handlers:
+    - include: ../handlers/main.yml

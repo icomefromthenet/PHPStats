@@ -1,0 +1,11 @@
+---
+# install apache on web server
+
+- hosts: webserver
+  user: vagrant
+  sudo: True
+
+  tasks:
+    - include: ../tasks/apache_setup.yml
+  handlers:
+    - include: ../handlers/main.yml

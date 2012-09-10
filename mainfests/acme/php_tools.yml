@@ -1,0 +1,11 @@
+---
+# install PHP tools
+
+- hosts: webserver
+  user: vagrant
+  sudo: True
+
+  tasks:
+    - include: ../tasks/php_tools.yml
+  handlers:
+    - include: ../handlers/main.yml

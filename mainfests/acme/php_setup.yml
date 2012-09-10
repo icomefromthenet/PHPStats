@@ -1,0 +1,11 @@
+---
+# Setup PHP on our web servers
+- hosts: webserver
+  user: root
+  sudo: True
+    
+  tasks:
+    - include: ../tasks/php_setup.yml
+  
+  handlers:
+    - include: ../handlers/main.yml

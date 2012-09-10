@@ -1,0 +1,36 @@
+---
+# Setup Mysql on server
+ - name: package update
+   action: apt update-cache=yes
+
+   # Install MySQL.
+ - name: install mysql from repo
+   action: apt pkg=mysql-server state=installed
+ 
+ - name: service mysql  
+   action: service name=mysql state=started
+ 
+ - name: install php5-mysql from repo
+   action: apt pkg=php5-mysql state=installed
+ 
+ - name: install mysql-client from repo
+   action: apt pkg=mysql-client state=installed
+    
+ - name: install python-mysqldb
+   action: apt pkg=python-mysqldb state=installed
+
+ - name: write my.cnf 
+   action: template src='../templates/my.cnf.j2' dest='/etc/mysql/my.cnf'
+   notify:
+    - restart mysql 
+ 
+ - name: Restart Mysql  before for adding 
+   action: service name=mysql state=restarted 
+ 
+ - name: assign password to db root
+   action: command /usr/bin/mysqladmin -u $mysql_user password $mysql_password
+   ignore_errors: True
+ 
+ - name: setup schema
+   action: raw /usr/bin/mysql -h $mysql_host -u $mysql_user -p${mysql_password} <<< 'CREATE SCHEMA $mysql_schema;'
+   ignore_errors: True

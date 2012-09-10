@@ -1,0 +1,41 @@
+---
+# install PHP Tools
+
+ - name: upgrade pear
+   action: command /usr/bin/pear upgrade PEAR
+  
+ - name: pear to use stable packages
+   action: command /usr/bin/pear config-set preferred_state stable
+ 
+ - name: discover icomefromthenet pear channel
+   action: command /usr/bin/pear channel-discover icomefromthenet.github.com/pear
+   ignore_errors: True   
+   
+ - name: discover phing pear channel
+   action: command /usr/bin/pear channel-discover pear.phing.info
+   ignore_errors: True
+   
+ - name: install phing
+   action: command /usr/bin/pear install phing/phing
+   ignore_errors: True
+
+   
+ - name: install pear git plugin
+   action: command /usr/bin/pear -d preferred_state=alpha install VersionControl_Git
+   ignore_errors: True
+
+ - name: install composer
+   action: get_url url=http://getcomposer.org/composer.phar dest=/usr/bin/composer.phar mode=0755
+   ignore_errors: True
+
+ - name: install pyrus.phar
+   action: get_url url=http://pear2.php.net/pyrus.phar dest=/usr/bin/pyrus.phar mode=0755
+   ignore_errors: True
+   
+ - name: install icomefromthenet/Faker
+   action: command /usr/bin/pear install -d preferred_state=stable icomefromthenet/Faker
+   ignore_errors: True
+   
+ - name: install icomefromthenet/Migrations
+   action: command /usr/bin/pear install -d preferred_state=stable icomefromthenet/Migration
+   ignore_errors: True

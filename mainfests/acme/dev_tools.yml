@@ -1,0 +1,11 @@
+---
+# install dev tools on server
+
+- hosts: webserver
+  user: vagrant
+  sudo: True
+
+  tasks:
+    - include: ../tasks/dev_tools.yml
+  handlers:
+    - include: ../handlers/main.yml

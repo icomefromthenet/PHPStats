@@ -1,0 +1,33 @@
+---
+# PHP.ini variables
+php_memory_limit: "128MB"
+php_error_reporting: "E_ALL & ~E_DEPRECATED"
+php_display_startup_errors: On
+php_display_errors: On
+php_track_errors: On
+php_post_max_size: 8M
+php_file_uploads: On
+php_upload_max_filesize: 2M
+php_upload_tmp_dir: /var/tmp
+php_max_file_uploads: 20
+php_allow_url_fopen: On
+php_date_timezone: Australia/Sydney
+
+# mysql variables
+mysql_bind_address: "127.0.0.1" 
+mysql_key_buffer: "16M"
+mysql_max_allowed_packet : "16M"
+mysql_schema: accounting
+mysql_password: vagrant 
+mysql_user: root
+mysql_host: localhost
+
+# apache
+apache_mod_security_release: modsecurity-crs_2.2.5
+apache_mod_scurity_download_url: http://downloads.sourceforge.net/project/mod-security/modsecurity-crs/0-CURRENT/modsecurity-crs_2.2.5.tar.gz
+
+# fail2ban
+fail2ban_log_level: 3
+fail2ban_log_file : /var/log/fail2ban.log
+fail2ban_destemail: getintouch@icomefromthenet.com
+fail2ban_ignoreip : 127.0.0.1

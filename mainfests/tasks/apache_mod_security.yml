@@ -1,0 +1,51 @@
+---
+# install and configure apache_mod_security
+
+ - name: install libxml dependecies
+   action: apt pkg=$item state=installed
+   with_items:
+    - libxml2
+    - libxml2-dev 
+    - libxml2-utils
+    
+ - name: install arpu dependecies
+   action: apt pkg=$item state=installed
+   with_items:
+    - libaprutil1
+    - libaprutil1-dev
+        
+ - name: install mod_security from repo
+   action: apt pkg=libapache-mod-security state=installed
+   notify:
+    - restart apache
+        
+ - name: download OWSAP rule set from sourceforge
+   action: get_url url=${apache_mod_scurity_download_url} dest=/etc/apache2/ 
+   
+ - name: uncompress the rule-set
+   action: command sudo /bin/tar xzf /etc/apache2/${apache_mod_security_release}.tar.gz chdir=/etc/apache2/
+ 
+ - name: remove existing ruleset directory
+   action: command rm -rf /etc/apache2/modsecurity-crs
+   ignore_errors: True
+   
+ - name: rename ruleset directory
+   action: command mv -f /etc/apache2/${apache_mod_security_release} /etc/apache2/modsecurity-crs
+   
+ - name: rename the OWSAP rule config file
+   action: command mv /etc/apache2/modsecurity-crs/modsecurity_crs_10_setup.conf.example /etc/apache2/modsecurity-crs/modsecurity_crs_10_config.conf 
+   notify:
+    - restart apache
+    
+ - name: copy activate rules script to server
+   action: copy src=../files/activate_rules.sh dest=/etc/apache2/modsecurity-crs/activate_rules.sh mode=0755 
+   
+ - name: run activate rules script  
+   action: command sudo /etc/apache2/modsecurity-crs/activate_rules.sh
+   notify:
+    - restart apache
+    
+ - name: remove activate rules script
+   action: command rm -f /etc/apache2/modsecurity-crs/activate_rules.sh
+
+    

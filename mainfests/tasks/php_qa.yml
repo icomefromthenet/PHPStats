@@ -1,0 +1,78 @@
+---
+#install php Quality Assurance tools (Phpunit)
+
+ - name: upgrade pear
+   action: command /usr/bin/pear upgrade PEAR
+  
+ - name: pear to use stable packages
+   action: command /usr/bin/pear config-set preferred_state stable
+
+ - name: Set Pear to auto discover
+   action: command /usr/bin/pear config-set auto_discover 1
+
+  
+ - name: discover symfony-project pear channel
+   action: command /usr/bin/pear channel-discover pear.symfony-project.com
+   ignore_errors: True   
+
+ - name: discover symfony2 pear channel
+   action: command /usr/bin/pear channel-discover pear.symfony.com
+   ignore_errors: True   
+  
+ - name: disover phpunit pear channel
+   action: command /usr/bin/pear channel-discover pear.phpunit.de
+   ignore_errors: True   
+    
+ - name: discover ez-components pear channel
+   action: command /usr/bin/pear channel-discover components.ez.no
+   ignore_errors: True   
+
+  
+ - name: discover pear.pdepend.org  channel
+   action: command /usr/bin/pear channel-discover pear.pdepend.org
+   ignore_errors: True   
+  
+ - name: discover pear.phpmd.org channel
+   action: command /usr/bin/pear channel-discover pear.phpmd.org
+   ignore_errors: True   
+  
+ - name : install symfony yaml pear library
+   action: command /usr/bin/pear -d preferred_state=stable install symfony/YAML
+   ignore_errors: True
+  
+ - name:  install phpunit
+   action: command /usr/bin/pear -d preferred_state=stable install --alldeps phpunit/PHPUnit
+   ignore_errors: True
+  
+ - name: install dbunit
+   action: command /usr/bin/pear -d preferred_state=stable install --alldeps phpunit/DbUnit
+   ignore_errors: True
+  
+ - name: install mockobject
+   action: command /usr/bin/pear -d preferred_state=stable install --alldeps phpunit/PHPUnit_MockObject
+   ignore_errors: True
+
+ - name: install ppw
+   action: command /usr/bin/pear install --alldeps phpunit/ppw
+   ignore_errors: True
+
+ - name: install phpcpd
+   action: command /usr/bin/pear install --alldeps phpunit/phpcpd
+   ignore_errors: True
+
+ - name: install phploc
+   action: command /usr/bin/pear install --alldeps phpunit/phploc
+   ignore_errors: True
+
+ - name: install php depend
+   action: command /usr/bin/pear install pdepend/PHP_Depend-beta
+   ignore_errors: True
+
+ - name: install php pmd
+   action: command /usr/bin/pear install --alldeps phpmd/PHP_PMD
+   ignore_errors: True
+
+ - name:  install php codesniffer
+   action: command /usr/bin/pear install pear/PHP_CodeSniffer
+   ignore_errors: True
+      

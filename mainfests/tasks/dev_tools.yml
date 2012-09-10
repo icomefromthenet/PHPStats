@@ -1,0 +1,11 @@
+---
+# install git and other tools
+ 
+ - name: package update
+   action: apt update-cache=yes
+   
+ - name: install git
+   action: apt pkg=git-core state=installed
+ 
+ - name: install byobu
+   action: apt pkg=byobu state=installed

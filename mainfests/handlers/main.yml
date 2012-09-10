@@ -1,0 +1,11 @@
+---
+# Handlers used in this app
+ - name: restart apache
+   action: service name=apache2 state=restarted
+ 
+ - name: restart mysql
+   action: service name=mysql state=restarted
+   
+ - name: restart fail2ban
+   action: service name=fail2ban-server state=restarted
+   

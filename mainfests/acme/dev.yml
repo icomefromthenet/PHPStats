@@ -1,0 +1,34 @@
+---
+# setup dev server 
+
+- hosts: webserver
+  user: vagrant
+  sudo: True
+  vars:
+    dev_mode: true
+  vars_files:
+    - ../global_vars.yml
+    - ../vars/dev.yml
+  tasks:
+    - include: ../tasks/apache_setup.yml
+    - include: ../tasks/apache_mod_security.yml
+    - include: ../tasks/php_setup.yml
+    
+    # install apache docs
+    - name: install apache docs
+      action: apt pkg=apache2-doc state=installed
+    
+    # xdebug php extension  
+    - name: install php xdebug extension
+      action: apt pkg=php5-xdebug state=installed
+    
+    # other tasks  
+    - include: ../tasks/php_qa.yml
+    - include: ../tasks/php_tools.yml
+    - include: ../tasks/php_pear_dev.yml
+    - include: ../tasks/dev_tools.yml
+    - include: ../tasks/mysql_setup.yml
+    - include: ../tasks/fail2ban.yml
+      
+  handlers:
+    - include: ../handlers/main.yml

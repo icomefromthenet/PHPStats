@@ -1,0 +1,11 @@
+---
+# install mysql and setup account
+
+- hosts: webserver
+  user: vagrant
+  sudo: True
+  
+  tasks:
+    - include: ../tasks/mysql_setup.yml
+  handlers:
+    - include: ../handlers/main.yml

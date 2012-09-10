@@ -1,0 +1,18 @@
+---
+# PHP.ini variables
+memory_limit: "128MB"
+error_reporting: "E_ALL & ~E_DEPRECATED"
+display_startup_errors: Off
+display_errors: Off
+track_errors: Off
+post_max_size: 8M
+file_uploads: On
+upload_max_filesize: 2M
+upload_tmp_dir: /var/tmp
+max_file_uploads: 20
+allow_url_fopen: On
+date_timezone: Australia/Sydney
+
+# mysql variables
+bind_address: "127.0.0.1" 
+key_buffer: "16M"

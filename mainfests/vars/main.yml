@@ -1,0 +1,6 @@
+---
+# Variables used in mysql setup
+vars:
+    mysql_schema: "accounting" 
+    mysql_username: "root"
+    mysql_password : "vagrant" 

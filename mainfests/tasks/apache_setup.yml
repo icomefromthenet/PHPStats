@@ -1,0 +1,33 @@
+---
+# Tasks used to setup apache
+ - name: package update
+   action: apt update-cache=yes
+ 
+ - name: install python-software-properties
+   action: apt pkg=python-software-properties state=installed
+   
+ - name: install apache 
+   action: apt pkg=apache2 state=installed
+   notify:
+    - restart apache
+    
+ - name: copy apache2.conf config file
+   action: template src=../templates/apache2.conf.j2 dest=/etc/apache2/apache2.conf state=file mode=0644
+   notify:
+    - restart apache
+   
+ - name: copy envvars config file
+   action: template src=../templates/envvars.j2 dest=/etc/apache2/envvars state=file mode=0644
+   notify:
+    - restart apache
+  
+ - name: copy httpd.conf config file
+   action: template src=../templates/httpd.conf.j2 dest=/etc/apache2/httpd.conf state=file mode=0644
+   notify:
+    - restart apache
+     
+ - name: copy ports.conf config file
+   action: template src=../templates/ports.conf.j2 dest=/etc/apache2/ports.conf state=file mode=0644
+   notify:
+    - restart apache
+     

@@ -1,0 +1,16 @@
+---
+ # Setup and configure fail2ban
+
+ - name: install fail2ban
+   action: apt pkg=fail2ban state=installed
+   
+ - name: copy fail2ban jail.conf config file
+   action: template src=../templates/jail.conf.j2 dest=/etc/fail2ban/jail.conf state=file mode=0644
+   notify:
+    - restart fail2ban
+    
+ - name: copy fail2ban config file
+   action: template src=../templates/fail2ban.conf.j2 dest=/etc/fail2ban/fail2ban.conf state=file mode=0644
+   notify:
+    - restart fail2ban 
+  

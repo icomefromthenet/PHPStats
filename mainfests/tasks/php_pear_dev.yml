@@ -1,0 +1,24 @@
+---
+# install code to develop pear extensions
+
+ - name: upgrade pear
+   action: command /usr/bin/pear upgrade PEAR
+ 
+ - name: pear to use stable packages
+   action: command /usr/bin/pear config-set preferred_state stable
+   
+ - name: discover prium pear channel
+   action : command /usr/bin/pear channel-discover pear.pirum-project.org
+   ignore_errors: True
+   
+ - name: install XML Serializer
+   action: command /usr/bin/pear -d preferred_state=alpha install XML_Serializer
+   ignore_errors: True
+
+ - name: install PEAR PackageFileManager2
+   action: command /usr/bin/pear install PEAR_PackageFileManager2
+   ignore_errors: True
+   
+ - name: install prium
+   action: command /usr/bin/pear install pirum/Pirum
+   ignore_errors: True

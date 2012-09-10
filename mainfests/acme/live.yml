@@ -1,0 +1,21 @@
+---
+# setup live server 
+
+- hosts: webserver
+  user: vagrant
+  sudo: True
+  vars:
+    dev_mode: false
+  vars_files:
+    - ../global_vars.yml
+    - ../vars/live.yml
+  tasks:
+     - include: ../tasks/apache_setup.yml
+     - include: ../tasks/php_setup.yml
+     - include: ../tasks/php_tools.yml
+     - include: ../tasks/dev_tools.yml
+     - include: ../tasks/mysql_setup.yml
+     - include: ../tasks/fail2ban.yml
+      
+  handlers:
+    - include: ../handlers/main.yml
