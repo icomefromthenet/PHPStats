@@ -1,57 +1,76 @@
 <?php
-require_once('lib/Stats.php');
-require_once('lib/ProbabilityDistribution/ProbabilityDistribution.php');
-require_once('lib/ProbabilityDistribution/Weibull.php');
-require_once('lib/ProbabilityDistribution/Rayleigh.php');
+namespace PHPStats\Tests\ProbabilityDistribution;
 
-use \PHPStats\ProbabilityDistribution\Rayleigh as Rayleigh;
+use PHPStats\PDistribution\Rayleigh as Rayleigh,
+    PHPStats\PCalculator\Rayleigh as RayleighCalculator,
+    PHPStats\PCalculator\Weibull as WeibullCalculator,
+    PHPStats\PCalculator\Exponential as ExponentialCalculator,
+    PHPStats\Tests\Base\PDTest;
 
-class RayleighTest extends PHPUnit_Framework_TestCase {
-	private $testObject;
 
-	public function __construct() {
-		$this->testObject = new Rayleigh(2);
-	}
+class RayleighTest extends PDTest
+{
+    /**
+      *  @var  PHPStats\PDistribution\Rayleigh
+      */
+    private $testObject;
 
-	public function test_rvs() {
-		$variates = array();
-		for ($i = 0; $i < 10000; $i++) $variates[] = $this->testObject->rvs();
-		$this->assertGreaterThanOrEqual(0.01, \PHPStats\StatisticalTests::kolmogorovSmirnov($variates, $this->testObject));
-		$this->assertLessThanOrEqual(0.99, \PHPStats\StatisticalTests::kolmogorovSmirnov($variates, $this->testObject));
-	}
+    public function __construct()
+    {
+	parent::__construct();
+	
+	$expCal = new ExponentialCalculator($this->randomGenerator,$this->basicStats);
+	$weiCal = new WeibullCalculator($this->randomGenerator,$this->basicStats,$expCal);
+	$rayleighCalculator = new RayleighCalculator($this->randomGenerator,$this->basicStats,$weiCal);
+	$this->testObject = new Rayleigh(2,$rayleighCalculator);
+    }
 
-	public function test_pdf() {
-		$this->assertEquals(0.22062, round($this->testObject->pdf(1), 5));
-		$this->assertEquals(0.12115, round($this->testObject->pdf(0.5), 5));
-	}
+    public function testRvs()
+    {
+	$variates = array();
+	for ($i = 0; $i < 10000; $i++) $variates[] = $this->testObject->rvs();
+	$this->assertGreaterThanOrEqual(0.01, $this->statisticalTests->kolmogorovSmirnov($variates, $this->testObject));
+	$this->assertLessThanOrEqual(0.99, $this->statisticalTests->kolmogorovSmirnov($variates, $this->testObject));
+    }
 
-	public function test_cdf() {
-		$this->assertEquals(0.25, round($this->testObject->cdf(1.51706), 5));
-		$this->assertEquals(0.5, round($this->testObject->cdf(2.35482), 5));
-	}
+    public function testPdf()
+    {
+	$this->assertEquals(0.22062, round($this->testObject->pdf(1), 5));
+	$this->assertEquals(0.12115, round($this->testObject->pdf(0.5), 5));
+    }
 
-	public function test_sf() {
-		$this->assertEquals(0.75, round($this->testObject->sf(1.51706), 5));
-		$this->assertEquals(0.5, round($this->testObject->sf(2.35482), 5));
-	}
+    public function testCdf()
+    {
+	$this->assertEquals(0.25, round($this->testObject->cdf(1.51706), 5));
+	$this->assertEquals(0.5, round($this->testObject->cdf(2.35482), 5));
+    }
 
-	public function test_ppf() {
-		$this->assertEquals(1.51706, round($this->testObject->ppf(0.25), 5));
-		$this->assertEquals(2.35482, round($this->testObject->ppf(0.5), 5));
-	}
+    public function testSF()
+    {
+	$this->assertEquals(0.75, round($this->testObject->sf(1.51706), 5));
+	$this->assertEquals(0.5, round($this->testObject->sf(2.35482), 5));
+    }
 
-	public function test_isf() {
-		$this->assertEquals(1.51706, round($this->testObject->isf(0.75), 5));
-		$this->assertEquals(2.35482, round($this->testObject->isf(0.5), 5));
-	}
+    public function testPpf()
+    {
+	$this->assertEquals(1.51706, round($this->testObject->ppf(0.25), 5));
+	$this->assertEquals(2.35482, round($this->testObject->ppf(0.5), 5));
+    }
 
-	public function test_stats() {
-		$summaryStats = $this->testObject->stats('mvsk');
+    public function testIsf()
+    {
+	$this->assertEquals(1.51706, round($this->testObject->isf(0.75), 5));
+	$this->assertEquals(2.35482, round($this->testObject->isf(0.5), 5));
+    }
 
-		$this->assertEquals(2.50663, round($summaryStats['mean'], 5));
-		$this->assertEquals(1.71681, round($summaryStats['variance'], 5));
-		$this->assertEquals(0.63111, round($summaryStats['skew'], 5));
-		$this->assertEquals(0.24509, round($summaryStats['kurtosis'], 5));
-	}
+    public function testStats()
+    {
+	$summaryStats = $this->testObject->stats('mvsk');
+
+	$this->assertEquals(2.50663, round($summaryStats['mean'], 5));
+	$this->assertEquals(1.71681, round($summaryStats['variance'], 5));
+	$this->assertEquals(0.63111, round($summaryStats['skew'], 5));
+	$this->assertEquals(0.24509, round($summaryStats['kurtosis'], 5));
+    }
 }
-?>
+/* End of File */
