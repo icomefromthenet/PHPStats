@@ -1,10 +1,11 @@
 {
-    "name": "PHPStats/PHPStats",
+    "name": "icomefromthenet/phpstats",
     "type": "library",
     "description": "Statistics library",
     "keywords": ["stats","statistics"],
     "homepage": "https://github.com/icomefromthenet/PHPStats",
     "license": "LGPL",
+    "version":"0.0.4",
     "authors": [
         {
             "name": "Michael Cordingley",
@@ -16,7 +17,7 @@
             "name": "Lewis Dyer",
             "email": "getintouch@icomefromthenet.com",
             "homepage": "www.icomefromthenet.com",
-            "role": "Developer"
+            "role": "Fork-Developer"
         }
     ],
     "require": {
